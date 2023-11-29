@@ -312,7 +312,8 @@ def gpt4all_query(_conn, query, model_id, max_tokens=300, verbose=True, verbose_
     else:
         response = gpt4all_response(query, model_id, max_tokens=max_tokens, verbose_query=False, verbose_response=False)
 
-    if save_to_db:
+    if save_to_db and response:
+        response = f"[!] BLANK RESPONSE TO QUERY: {query}" if response == "" else response
         # Save to database
         save_response_to_db(_conn, _time, model_id, models[model_id]["model"], buffer.getvalue(), query, response)
 
@@ -330,3 +331,4 @@ if __name__ == "__main__":
     print_model_options()
     gpt4all_query(conn, args.query, args.model_id, max_tokens=args.tokens)
     conn.close()
+    
